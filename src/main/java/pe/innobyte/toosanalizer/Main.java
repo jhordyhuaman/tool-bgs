@@ -541,9 +541,15 @@ public class Main extends javax.swing.JFrame {
             
             List<ExelTable> exelData = new ArrayList<>();
             
+            int key = 0;
             for (ActivitySample sample : dataSet) {
-               
-               checkSleepLineTime(sample); 
+     
+                if((sample.getKind() == 4 || sample.getKind() == 3 ) && (dataSet.size() == key+1) ){
+                    checkTypeOfActivity(sample);
+                } 
+                key++;
+                
+                checkSleepLineTime(sample); 
                
                // UI add Row in table result data exel 
 
@@ -554,9 +560,7 @@ public class Main extends javax.swing.JFrame {
                     sample.getIntensity(),
                     sample.getKind(), 
                     sample.getHeartRate(), 
-                    sample.getHeartRate()));
-            
-
+                    sample.getHeartRate())); 
             }
 
             
@@ -592,7 +596,6 @@ public class Main extends javax.swing.JFrame {
             System.out.println("--------------------------------------------");
             System.out.println("dateSummary :" + day.getKey());
             for (SleepBlockData sleep : day.getValue()) {
-
                 for (ActivitySample sm : sleep.getSleepData()) {
                     schemeHeart(sm);
                     schemeStep(sm);
@@ -723,6 +726,7 @@ public class Main extends javax.swing.JFrame {
             }
 
             if (sleepModelData.size() == index) {
+                System.out.println(sleepModelData.size() == index);
                 SleepModel sm = new SleepModel();
                 sm.setDatetime(last_TimeSleep);
                 sm.setLevel(last_LevelSleep);
@@ -919,21 +923,17 @@ public class Main extends javax.swing.JFrame {
             sleepData.add(sample);
 
         } else {
-            //------------- Activity Period ----------//
+            checkTypeOfActivity(sample);
+        }
+    }
+    
+    public void checkTypeOfActivity(ActivitySample sample){
             if (addedSleep) {
                 Date startTimeSleep = getDateFromSample(sample);
                 // evaluate how many minutes of sleep there are
                 long diff = ((endTimeSleep.getTime() - startTimeSleep.getTime()) / MINUTE_IN_MILLIS);
                 if (diff >= 25) { // todo : Delimiter 25 minutes block sleep
-                    //  System.out.println("* End - Time : "+endTimeSleep.toString());
-                    //  System.out.println("* Start Time : "+startTimeSleep.toString()); // or lastValue
-
-                    //  System.out.println("* Minutes    : "+diff+" Sleep Data : "+sleepData.size());// evaluate older 25 minutes
-
                     String DateSummary = df.format(endTimeSleep);
-                    //  System.out.println("* LastSummary : "+LastDateSummary);
-                    //  System.out.println("--------------------------------------------------------");
-
                     // ++++++++++++++ add data ++++++++++++++++++++++++++++++
                     SleepBlockData sleepBlockData = new SleepBlockData();
                     sleepBlockData.setDateSummary(DateSummary);
@@ -947,11 +947,8 @@ public class Main extends javax.swing.JFrame {
                 addedSleep = false;
                 sleepData.clear();
                 //+++++++++++++++++++++++++++++++++
-
-            }
+            }        
             endTimeSleep = null;
-        }
-
     }
     
     
