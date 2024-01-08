@@ -45,10 +45,7 @@ import pe.innobyte.toosanalizer.core.model.HeartModel;
 import pe.innobyte.toosanalizer.core.model.SleepBlockData;
 import pe.innobyte.toosanalizer.core.model.SleepModel;
 import pe.innobyte.toosanalizer.core.model.StepsModel;
-import pe.innobyte.toosanalizer.utils.DateTimeUtils;
-import pe.innobyte.toosanalizer.utils.ExelTable;
-import pe.innobyte.toosanalizer.utils.ExelTableModel;
-import pe.innobyte.toosanalizer.utils.ExelTableRender;
+import pe.innobyte.toosanalizer.utils.*;
 
 /**
  *
@@ -366,6 +363,7 @@ public class Main extends javax.swing.JFrame {
             System.out.println(pathJSON);
             Runtime.getRuntime().exec( "notepad.exe "+pathJSON);
 
+
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -492,12 +490,13 @@ public class Main extends javax.swing.JFrame {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.rowIterator();
 
-            List<ActivitySample> data = new ArrayList<>();
+            List<ActivitySample> data = new ArrayList<>(); // todo : Añadir los datos del exel
 
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 if(row.getRowNum() == 0 && row.getCell(0) != null){
-                  String employed =  row.getCell(1).getStringCellValue();
+                    System.out.println("Empleado : "+ row.getCell(1).getNumericCellValue());
+                  String employed = String.valueOf(row.getCell(1).getNumericCellValue());
                   txtNombre.setText(employed);
                 }
           
@@ -505,16 +504,19 @@ public class Main extends javax.swing.JFrame {
                     data.add(new ActivitySample() {
                         @Override
                         public int getTimestamp() {
+                            //System.out.println("Timestamp : "+(int) (row.getCell(0).getDateCellValue().getTime() / 1000L));
                             return (int) (row.getCell(0).getDateCellValue().getTime() / 1000L);
                         }
 
                         @Override
                         public int getKind() {
-                            return (int) row.getCell(3).getNumericCellValue();
+                           // System.out.println("Kind : "+(int) row.getCell(2).getNumericCellValue());
+                            return (int) row.getCell(2).getNumericCellValue();
                         }
 
                         @Override
                         public float getIntensity() {
+                           // System.out.println("Intensity : "+(float) row.getCell(1).getNumericCellValue());
                             return (float) row.getCell(1).getNumericCellValue();
                             //return Float.parseFloat(row.getCell(2).getStringCellValue());
                             //Object objdata = sheets.getRow(choosenRow).getCell(3).getStringCellValue();
@@ -522,20 +524,30 @@ public class Main extends javax.swing.JFrame {
 
                         @Override
                         public int getSteps() {
-                            return (int) row.getCell(6).getNumericCellValue();
+                            return (int) row.getCell(4).getNumericCellValue();
                         }
 
                         @Override
                         public int getHeartRate() {
-                            return (int) row.getCell(4).getNumericCellValue();
+                            return (int) row.getCell(3).getNumericCellValue();
                         }
                     });
                 }
             }
 
+            /* Importar clase ConvertBlocksSleep */
+            ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
+
+            /* Procesar datos (Estructura el JSON)*/
+            convertBlocks.processData(data);
+
+            /* Obtener JSON */
+            String JSON = convertBlocks.getJSONBlocksSleep().toString();
+
+            saveJSONStoreDevice(fileName,JSON);
 
 
-            ArrayList<ActivitySample> dataSet = new ArrayList<>(data);
+            ArrayList<ActivitySample> dataSet = new ArrayList<>(data); // Exel Data parse to ActivitySample class
 
             Collections.reverse(dataSet);
             
@@ -590,20 +602,16 @@ public class Main extends javax.swing.JFrame {
         }
 
 
-        System.out.println("Group sleep blocks by Date summary");
 
         for (Map.Entry<String, List<SleepBlockData>> day : map.entrySet()) {
-            System.out.println("--------------------------------------------");
-            System.out.println("dateSummary :" + day.getKey());
+
             for (SleepBlockData sleep : day.getValue()) {
                 for (ActivitySample sm : sleep.getSleepData()) {
                     schemeHeart(sm);
                     schemeStep(sm);
                     schemeSleep(sm);
                 }
-                System.out.println(" * start-sleep   :" + sleep.getStartDate());
-                System.out.println(" * end-sleep     :" + sleep.getEndDate());
-                System.out.println(" * data          :" + sleep.getSleepData().size());
+
                 
                 addTableBlockSleep(day.getKey(),sleep.getStartDate(),sleep.getEndDate(),sleep.getSleepData());
 
@@ -626,10 +634,8 @@ public class Main extends javax.swing.JFrame {
         txtJSON.setLineWrap(true);
         txtJSON.setWrapStyleWord(true);
         
-        saveJSONStoreDevice(fileName,allDataSleep.toString());
-        
-     //   System.out.println(allDataSleep);
-     
+     //   saveJSONStoreDevice(fileName,allDataSleep.toString());
+
           textTTS.setText(getHM(asleepTTS));
 
     }
@@ -726,7 +732,6 @@ public class Main extends javax.swing.JFrame {
             }
 
             if (sleepModelData.size() == index) {
-                System.out.println(sleepModelData.size() == index);
                 SleepModel sm = new SleepModel();
                 sm.setDatetime(last_TimeSleep);
                 sm.setLevel(last_LevelSleep);
@@ -950,8 +955,7 @@ public class Main extends javax.swing.JFrame {
             }        
             endTimeSleep = null;
     }
-    
-    
+
     private String getHM(long value) {
         return DateTimeUtils.formatDurationHoursMinutes(value, TimeUnit.MINUTES);
     }
