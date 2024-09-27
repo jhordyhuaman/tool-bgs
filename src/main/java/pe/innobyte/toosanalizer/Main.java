@@ -538,38 +538,25 @@ public class Main extends javax.swing.JFrame {
                 dataBAND.add(new MiBandActivitySample(sample));
             }
 
-
-            //System.out.println("Correct Form Kind VERSION 1");
-            //System.out.println("--------------------------------------------------------------------------------");
             // TODO : CALCULATE DATA WITH FORM KIND
-            //CorrectForm correctForm = new CorrectForm(dataBAND);
-           // correctForm.applyFormKind();
 
 
             System.out.println("Correct Form Kind VERSION 2");
             System.out.println("--------------------------------------------------------------------------------");
 
-             //CorrectForm correctFormData2 = new CorrectForm(correctedRawKind(dataBAND));
-             //correctFormData2.applyFormKind();
-
-            SleepActivityAnalyzer correctFormData2 = new SleepActivityAnalyzer(dataBAND);
-            correctFormData2.analyzeSleepActivity();
+            SleepActivityAnalyzer correctFormData2 = new SleepActivityAnalyzer(correctedRawKind(dataBAND));
+            MiBandActivitySample[] data2 = correctFormData2.applyFormKind();
 
 
 
             /* Importar clase ConvertBlocksSleep */
             ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
-
-            /* Procesar datos (Estructura el JSON)*/
-            convertBlocks.processData(data);
-
-            /* Obtener JSON */
+            convertBlocks.processData(List.of(data2));
             String JSON = convertBlocks.getJSONBlocksSleep().toString();
-
             saveJSONStoreDevice(fileName,JSON);
 
 
-            ArrayList<ActivitySample> dataSet = new ArrayList<>(data); // Exel Data parse to ActivitySample class
+            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of(data2)); // Exel Data parse to ActivitySample class
 
             Collections.reverse(dataSet);
             
