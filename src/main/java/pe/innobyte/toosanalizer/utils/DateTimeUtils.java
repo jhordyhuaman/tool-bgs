@@ -5,6 +5,10 @@
 package pe.innobyte.toosanalizer.utils;
 
 import com.github.pfichtner.durationformatter.DurationFormatter;
+import pe.innobyte.toosanalizer.core.model.MiBandActivitySample;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,4 +25,10 @@ public class DateTimeUtils {
                 .build();
         return df.format(duration, unit);
     }
+
+    public static String getDateFromSample(MiBandActivitySample sample) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        return dateFormat.format(new Date(sample.getTimestamp() * 1000L));
+    }
+
 }

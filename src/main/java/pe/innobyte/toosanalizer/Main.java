@@ -40,11 +40,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import pe.innobyte.toosanalizer.core.model.ActivitySample;
-import pe.innobyte.toosanalizer.core.model.HeartModel;
-import pe.innobyte.toosanalizer.core.model.SleepBlockData;
-import pe.innobyte.toosanalizer.core.model.SleepModel;
-import pe.innobyte.toosanalizer.core.model.StepsModel;
+import pe.innobyte.toosanalizer.core.model.*;
 import pe.innobyte.toosanalizer.utils.*;
 
 /**
@@ -481,6 +477,8 @@ public class Main extends javax.swing.JFrame {
     //--------------------------------------------------------------------------
     private void onLaunchDefaultApplication(ActionEvent evt) {
         fileName = txtFile.getText();
+        System.out.println("fileName : "+fileName);
+        if(fileName.isEmpty()) fileName = "/Users/jhordyhuamanollero/Downloads/HistorialDispositivo__20240104104630.xls.xlsx";
         File file = new File(fileName);
 
         //Create Workbook instance holding reference to .xlsx file
@@ -534,6 +532,30 @@ public class Main extends javax.swing.JFrame {
                     });
                 }
             }
+
+            List<MiBandActivitySample> dataBAND = new ArrayList<>();
+            for (ActivitySample sample : data) {
+                dataBAND.add(new MiBandActivitySample(sample));
+            }
+
+
+            //System.out.println("Correct Form Kind VERSION 1");
+            //System.out.println("--------------------------------------------------------------------------------");
+            // TODO : CALCULATE DATA WITH FORM KIND
+            //CorrectForm correctForm = new CorrectForm(dataBAND);
+           // correctForm.applyFormKind();
+
+
+            System.out.println("Correct Form Kind VERSION 2");
+            System.out.println("--------------------------------------------------------------------------------");
+
+             //CorrectForm correctFormData2 = new CorrectForm(correctedRawKind(dataBAND));
+             //correctFormData2.applyFormKind();
+
+            SleepActivityAnalyzer correctFormData2 = new SleepActivityAnalyzer(dataBAND);
+            correctFormData2.analyzeSleepActivity();
+
+
 
             /* Importar clase ConvertBlocksSleep */
             ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
@@ -638,6 +660,26 @@ public class Main extends javax.swing.JFrame {
 
           textTTS.setText(getHM(asleepTTS));
 
+    }
+
+    public List<MiBandActivitySample> correctedRawKind(List<? extends MiBandActivitySample> activitySamples){
+        List<MiBandActivitySample> allData = new ArrayList<>();
+        for (MiBandActivitySample sample : activitySamples){
+            if(sample.getHeartRate() > 250){
+                float intensity;
+                if(sample.getIntensity()>0){
+                    intensity = sample.getIntensity();
+                }else {
+                    //intensity =  18; // 0.100 * 180  = [18]
+                    intensity =  18; // 0.100 * 180  = [18]
+                }
+                sample.setIntensity(intensity);
+                allData.add(sample);
+            }else{
+                allData.add(sample);
+            }
+        }
+        return allData;
     }
 
     long asleepTTS = 0;    long awakeTTS = 0;

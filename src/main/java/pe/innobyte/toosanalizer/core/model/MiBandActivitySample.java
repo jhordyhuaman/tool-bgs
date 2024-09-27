@@ -1,6 +1,6 @@
 package pe.innobyte.toosanalizer.core.model;
 
-public class BandActivitySample {
+public class MiBandActivitySample implements ActivitySample  {
     private int timestamp;
     private long deviceId;
     private long userId;
@@ -9,7 +9,15 @@ public class BandActivitySample {
     private int steps;
     private int heartRate;
 
-    public BandActivitySample() {
+    public MiBandActivitySample() {
+    }
+
+    public MiBandActivitySample(ActivitySample sample) {
+        this.timestamp = sample.getTimestamp();
+        //this.Kind = sample.getKind();
+        this.Intensity = sample.getIntensity();
+        this.steps = sample.getSteps();
+        this.heartRate = sample.getHeartRate();
     }
 
     public int getTimestamp() {
