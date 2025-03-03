@@ -208,6 +208,7 @@ public class SleepAnalyzerOne {
         for (MiBandActivitySample sample : samples) {
             filters(sample,index);
             sample.setKind(sleepState); // correct form
+            sample.setStageSeven(StageSleepSeven); // AA
             sample.setStageEight(StageSleepEight); // AB
             sample.setStageZero(stageSleepZero); // F
             list.add(sample);

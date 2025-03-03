@@ -173,86 +173,6 @@ public class SleepCoreUtils {
         return ((avgUp+avgDown)/2);
     }
 
-    public static int getSumStageEightUpDown(int timestamp, List<? extends MiBandActivitySample> samples) {
-        float avgUp =  calculateSumStageEightUp(9, timestamp, samples,0);
-        float avgDown =  calculateSumEightDown(8, timestamp, samples,1);
-
-        return (int) ((avgUp+avgDown));
-    }
-
-    public static int getSumStageFourteenUpDown(int timestamp, List<? extends MiBandActivitySample> samples) {
-        float avgUp =  calculateSumStageFourTeenUp(9, timestamp, samples,0); // 9-0 = 9 => ARRAY-IS = 8 rows
-        float avgDown =  calculateSumFourteenDown(8, timestamp, samples,1); // 8 -> in array = 7 rows
-
-        return (int) ((avgUp+avgDown));
-    }
-    public static float calculateSumStageEightUp(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples, Integer... skipCurrent) {
-        int index = (skipCurrent != null)? 1:0;
-        float averageIntensity = 0;
-
-        for(int i = 0; i< samples.size(); i++){
-            if(samples.get(i).getTimestamp() == currentIndex){
-                for (int j = index; j < windowSize; j ++){
-                    int indexData = (1+ (i-j));
-                    if( indexData >= 0){
-                       // System.out.println("DateUP :"+new Date(samples.get(indexData).getTimestamp() * 1000L)+" kind: "+samples.get(indexData).getKind()+" sumEight: "+ samples.get(indexData).getStageEight());
-                         averageIntensity = (averageIntensity + samples.get(indexData).getStageEight());
-                    }
-                }
-            }
-        }
-         return averageIntensity;
-    }
-    public static float calculateSumStageFourTeenUp(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples, Integer... skipCurrent) {
-        int index = (skipCurrent != null)? 1:0;
-        float averageIntensity = 0;
-
-        for(int i = 0; i< samples.size(); i++){
-            if(samples.get(i).getTimestamp() == currentIndex){
-                for (int j = index; j < windowSize; j ++){
-                    int indexData = (1+ (i-j));
-                    if( indexData >= 0){
-                        //System.out.println("14-UP :"+new Date(samples.get(indexData).getTimestamp() * 1000L)+" sum14: "+ samples.get(indexData).getStageFourteen());
-                        averageIntensity = (averageIntensity + samples.get(indexData).getStageFourteen());
-                    }
-                }
-            }
-        }
-        return averageIntensity;
-    }
-
-    public static float calculateSumEightDown(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples,Integer... skipCurrent) {
-        int index = (skipCurrent != null)? 1:0;
-        float averageIntensity = 0;
-        for(int i = 0; i< samples.size(); i++){
-            if(samples.get(i).getTimestamp() == currentIndex){
-                for (int j = index; j < windowSize; j ++){
-                    if(i != samples.size() && samples.size() > (i+j)){
-                      //  System.out.println("DateDW :"+new Date(samples.get((i+j)).getTimestamp() * 1000L)+" kind: "+samples.get((i+j)).getKind()+" sumEight: "+ samples.get((i+j)).getStageEight());
-                        averageIntensity = (averageIntensity + samples.get((i+j)).getStageEight());
-                    }
-
-                }
-            }
-        }
-        return  averageIntensity;
-    }
-    public static float calculateSumFourteenDown(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples,Integer... skipCurrent) {
-        int index = (skipCurrent != null)? 1:0;
-        float averageIntensity = 0;
-        for(int i = 0; i< samples.size(); i++){
-            if(samples.get(i).getTimestamp() == currentIndex){
-                for (int j = index; j < windowSize; j ++){
-                    if(i != samples.size() && samples.size() > (i+j)){
-                       // System.out.println("14-DW :"+new Date(samples.get((i+j)).getTimestamp() * 1000L) + " sum14: "+ samples.get((i+j)).getStageFourteen());
-                        averageIntensity = (averageIntensity + samples.get((i+j)).getStageFourteen());
-                    }
-
-                }
-            }
-        }
-        return  averageIntensity;
-    }
 
     public static int getHeartRatePrevValue(MiBandActivitySample sample,List<? extends MiBandActivitySample> samples) {
         int index = samples.indexOf(sample);
@@ -277,9 +197,9 @@ public class SleepCoreUtils {
         return ACTIVITY;
     }
 
-    public static int getAverageHeartDown(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples) {
-        int totalHeartRate = 0;
-        int numRows = 0;
+    public static float getAverageHeartDown(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples) {
+        float totalHeartRate = 0;
+        float numRows = 0;
 
         for (int i = 0; i < samples.size(); i++) {
             if (samples.get(i).getTimestamp() == currentIndex) {
@@ -294,27 +214,10 @@ public class SleepCoreUtils {
             }
         }
 
-        return numRows > 0 ? (int) Math.round((double) totalHeartRate / numRows) : 0;
+        return numRows > 0 ? (totalHeartRate / numRows) : 0;
     }
 
 
-    public static int getStageSleepTwelveSumDown(int windowSize, int currentIndex, List<? extends MiBandActivitySample> samples) {
-        int totalAvgDown = 0;
-
-        for (int i = 0; i < samples.size(); i++) {
-            if (samples.get(i).getTimestamp() == currentIndex) {
-                for (int j = 0; j < windowSize; j++) {
-                    int indexData = i - j;
-                    if (indexData >= 0) {
-                        totalAvgDown += samples.get(indexData).getStageTwelve();
-                    }
-                }
-                break;
-            }
-        }
-
-        return totalAvgDown;
-    }
     /**
      * Enumeración de estados de sueño.
      */

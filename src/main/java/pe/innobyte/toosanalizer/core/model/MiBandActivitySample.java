@@ -10,12 +10,11 @@ public class MiBandActivitySample implements ActivitySample  {
     private int heartRate;
 
     // Columns for loop 2
+    private  int stageSeven;
     private  int stageEight;
     private  float stageZero;
     // Columns for loop 3
     private  int stageTen;
-    private  int stageTwelve;
-    private  int stageFourteen;
     private  int stageEleven;
 
 
@@ -30,6 +29,14 @@ public class MiBandActivitySample implements ActivitySample  {
         this.Intensity = sample.getIntensity();
         this.steps = sample.getSteps();
         this.heartRate = sample.getHeartRate();
+    }
+
+    public int getStageSeven() {
+        return stageSeven;
+    }
+
+    public void setStageSeven(int stageSeven) {
+        this.stageSeven = stageSeven;
     }
 
     public int getTimestamp() {
@@ -93,22 +100,6 @@ public class MiBandActivitySample implements ActivitySample  {
     }
     public void setSleepSateLevel(int sleepSateLevel) {
         this.sleepSateLevel = sleepSateLevel;
-    }
-
-    public int getStageTwelve() {
-        return stageTwelve;
-    }
-
-    public void setStageTwelve(int stageTwelve) {
-        this.stageTwelve = stageTwelve;
-    }
-
-    public int getStageFourteen() {
-        return stageFourteen;
-    }
-
-    public void setStageFourteen(int stageFourteen) {
-        this.stageFourteen = stageFourteen;
     }
 
     public int getStageTen() {

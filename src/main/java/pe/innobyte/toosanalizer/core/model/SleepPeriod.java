@@ -75,4 +75,20 @@ public class SleepPeriod {
                 .orElse(0); // Si no hay valores válidos, devolver 0
     }
 
+    public int calculateMaxHeartRateOfLastSleep() {
+        if (sleepData == null || sleepData.isEmpty()) {
+            return 0;
+        }
+
+        List<ActivitySample> sortedData = new ArrayList<>(sleepData);
+        Collections.reverse(sortedData);
+
+        // Calcular el valor mínimo del ritmo cardíaco usando Streams
+        return sortedData.stream()
+                .mapToInt(ActivitySample::getHeartRate) // Convertir a int
+                .filter(hr -> hr > 0) // Filtrar valores válidos
+                .max() // Obtener el valor maximo
+                .orElse(0); // Si no hay valores válidos, devolver 0
+    }
+
 }

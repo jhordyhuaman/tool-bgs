@@ -554,41 +554,38 @@ public class Main extends javax.swing.JFrame {
             ConvertBlocksSleep blocksSleep = new ConvertBlocksSleep();
             SleepAnalyzerOne coreOne = new SleepAnalyzerOne(correctData);
             SleepAnalyzerTwo coreTwo = new SleepAnalyzerTwo();
-            SleepAnalyzerThree coreThree = new SleepAnalyzerThree();
 
             List<MiBandActivitySample> sleepAnalyzerOne = coreOne.runProcess();
 
             SleepPeriod lastPeriod = blocksSleep.calculateLastPeriod(sleepAnalyzerOne);
             float avg60down = (lastPeriod.calculateAverageHeartRateOfLast60()*FILTER_HEART_RATE_CALCULATE);
             float min60down = lastPeriod.calculateMinHeartRateOfLast60();
+            float maxRCValueSleep = lastPeriod.calculateMaxHeartRateOfLastSleep();
 
             List<MiBandActivitySample> sleepAnalyzerTwo = coreTwo
-                    .setHeartAVGLastSleep(Math.round(avg60down))
+                    .setHeartAVGLastSleep(avg60down)
+                    .setHeartMAXvalueSleep((int) maxRCValueSleep)
                     .runProcess(sleepAnalyzerOne);
 
-            MiBandActivitySample[] sleepAnalyzerThree = coreThree
-                    .setHeartAVGLastSleep(Math.round(avg60down))
-                    .setHeartMINLastSleep((int) min60down)
-                    .runProcess(sleepAnalyzerTwo);
 
           //  to print in view UI
 
            Object[][] dataToView =  coreOne.getLogUI();
            Object[][] dataToView2 = coreTwo.getLogUI();
-           Object[][] dataToView3 = coreThree.getLogUI();
+
 
            // view data to EXEL IN UI
-            new FormValidateUI().showCombinedTable(dataToView,dataToView2,dataToView3);
+            new FormValidateUI().showCombinedTable(dataToView,dataToView2);
 
 
            // convert in JSON
-           ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
-            convertBlocks.calculatePeriods(List.of(sleepAnalyzerThree));
+            ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
+            convertBlocks.calculatePeriods(List.of((MiBandActivitySample) sleepAnalyzerTwo));
             String JSON = convertBlocks.getJSONBlocksSleep().toString();
             //saveJSONStoreDevice(fileName,JSON);
 
 
-            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of(sleepAnalyzerThree)); // Exel Data parse to ActivitySample class
+            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of((MiBandActivitySample) sleepAnalyzerTwo)); // Exel Data parse to ActivitySample class
 
             Collections.reverse(dataSet);
             
