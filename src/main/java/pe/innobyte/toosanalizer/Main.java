@@ -40,8 +40,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import pe.innobyte.toosanalizer.UI.FormValidateUI;
 import pe.innobyte.toosanalizer.core.model.*;
 import pe.innobyte.toosanalizer.utils.*;
+
+import static pe.innobyte.toosanalizer.core.sleep.SleepCoreUtils.FILTER_HEART_RATE_CALCULATE;
 
 /**
  *
@@ -466,7 +469,7 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }
-    
+
     private void disableActions() {
         txtFile.setEnabled(false);
         btnLaunchApplication.setEnabled(false);
@@ -475,10 +478,13 @@ public class Main extends javax.swing.JFrame {
 
    private String fileName;
     //--------------------------------------------------------------------------
+
+
     private void onLaunchDefaultApplication(ActionEvent evt) {
         fileName = txtFile.getText();
         System.out.println("fileName : "+fileName);
-        if(fileName.isEmpty()) fileName = "/Users/jhordyhuamanollero/Downloads/HistorialDispositivo__20240104104630.xls.xlsx";
+        //if(fileName.isEmpty()) fileName = "/Users/jhordyhuamanollero/Downloads/27-09-2024 -002 Mod Formula.xlsx";
+        if(fileName.isEmpty()) fileName = "/Users/jhordyhuamanollero/Downloads/Pruebas formulas 21-11-24 FernandoV 002.xlsx";
         File file = new File(fileName);
 
         //Create Workbook instance holding reference to .xlsx file
@@ -493,9 +499,9 @@ public class Main extends javax.swing.JFrame {
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 if(row.getRowNum() == 0 && row.getCell(0) != null){
-                    System.out.println("Empleado : "+ row.getCell(1).getNumericCellValue());
-                  String employed = String.valueOf(row.getCell(1).getNumericCellValue());
-                  txtNombre.setText(employed);
+                  //  System.out.println("Empleado : "+ row.getCell(1).getNumericCellValue());
+                  //String employed = String.valueOf(row.getCell(1).getNumericCellValue());
+                 // txtNombre.setText(employed);
                 }
           
                 if (row.getRowNum() >= 5 && row.getCell(0) != null) {
@@ -540,23 +546,49 @@ public class Main extends javax.swing.JFrame {
 
             // TODO : CALCULATE DATA WITH FORM KIND
 
-
             System.out.println("Correct Form Kind VERSION 2");
             System.out.println("--------------------------------------------------------------------------------");
 
-            SleepActivityAnalyzer correctFormData2 = new SleepActivityAnalyzer(correctedRawKind(dataBAND));
-            MiBandActivitySample[] data2 = correctFormData2.applyFormKind();
+            List<MiBandActivitySample> correctData = correctedRawKind(dataBAND);
+
+            ConvertBlocksSleep blocksSleep = new ConvertBlocksSleep();
+            SleepAnalyzerOne coreOne = new SleepAnalyzerOne(correctData);
+            SleepAnalyzerTwo coreTwo = new SleepAnalyzerTwo();
+            SleepAnalyzerThree coreThree = new SleepAnalyzerThree();
+
+            List<MiBandActivitySample> sleepAnalyzerOne = coreOne.runProcess();
+
+            SleepPeriod lastPeriod = blocksSleep.calculateLastPeriod(sleepAnalyzerOne);
+            float avg60down = (lastPeriod.calculateAverageHeartRateOfLast60()*FILTER_HEART_RATE_CALCULATE);
+            float min60down = lastPeriod.calculateMinHeartRateOfLast60();
+
+            List<MiBandActivitySample> sleepAnalyzerTwo = coreTwo
+                    .setHeartAVGLastSleep(Math.round(avg60down))
+                    .runProcess(sleepAnalyzerOne);
+
+            MiBandActivitySample[] sleepAnalyzerThree = coreThree
+                    .setHeartAVGLastSleep(Math.round(avg60down))
+                    .setHeartMINLastSleep((int) min60down)
+                    .runProcess(sleepAnalyzerTwo);
+
+          //  to print in view UI
+
+           Object[][] dataToView =  coreOne.getLogUI();
+           Object[][] dataToView2 = coreTwo.getLogUI();
+           Object[][] dataToView3 = coreThree.getLogUI();
+
+           // view data to EXEL IN UI
+            new FormValidateUI().showCombinedTable(dataToView,dataToView2,dataToView3);
 
 
-
-            /* Importar clase ConvertBlocksSleep */
-            ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
-            convertBlocks.processData(List.of(data2));
+           // convert in JSON
+           ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
+            convertBlocks.calculatePeriods(List.of(sleepAnalyzerThree));
             String JSON = convertBlocks.getJSONBlocksSleep().toString();
-            saveJSONStoreDevice(fileName,JSON);
+            //saveJSONStoreDevice(fileName,JSON);
 
 
-            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of(data2)); // Exel Data parse to ActivitySample class
+            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of(sleepAnalyzerThree)); // Exel Data parse to ActivitySample class
 
             Collections.reverse(dataSet);
             

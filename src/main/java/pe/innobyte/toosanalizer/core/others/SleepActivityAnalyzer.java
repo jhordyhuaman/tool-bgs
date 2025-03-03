@@ -64,9 +64,9 @@ public class SleepActivityAnalyzer {
 
             sample.setKind(sleepState); // Actualiza el estado en la muestra
             if(sleepState == 4 || sleepState == 3){
-                System.err.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} | isSleepStarting :\{isSleepStarting} | isSleepOngoing :\{isSleepOngoing} | sleepEndFlag :\{sleepEndFlag} | endSleepFlag :\{endSleepFlag}");
+              //  System.err.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} | isSleepStarting :\{isSleepStarting} | isSleepOngoing :\{isSleepOngoing} | sleepEndFlag :\{sleepEndFlag} | endSleepFlag :\{endSleepFlag}");
             }else {
-                System.out.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} | isSleepStarting :\{isSleepStarting} | isSleepOngoing :\{isSleepOngoing} | sleepEndFlag :\{sleepEndFlag} | endSleepFlag :\{endSleepFlag}");
+              //  System.out.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} | isSleepStarting :\{isSleepStarting} | isSleepOngoing :\{isSleepOngoing} | sleepEndFlag :\{sleepEndFlag} | endSleepFlag :\{endSleepFlag}");
             }
 
             analyzedSamples.add(sample);

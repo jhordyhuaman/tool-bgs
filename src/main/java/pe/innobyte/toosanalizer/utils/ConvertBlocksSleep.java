@@ -42,15 +42,16 @@ public class ConvertBlocksSleep {
     private boolean addedSleep = false;
 
 
+
     /**
      * Process data from list of activity sample
      * @param data list of activity sample
      */
-    public void processData(List<ActivitySample> data) {
+    public List<SleepPeriod>  calculatePeriods(List<MiBandActivitySample> data) {
+        List<SleepPeriod> sleepPeriods = new ArrayList<>();
         // process data in reverse order
         for (int i = data.size() - 1; i >= 0; i--) {
             ActivitySample sample = data.get(i);
-
             if ((sample.getKind() == 4 || sample.getKind() == 3) && i == 0) {
                 checkTypeOfActivity(sample);
             }
@@ -63,11 +64,11 @@ public class ConvertBlocksSleep {
             dayDataBlock.computeIfAbsent(dataBlock.getDateSummary(), k -> new ArrayList<>()).add(dataBlock);
         }
 
-        System.out.println("Group sleep blocks by Date summary");
+        //System.out.println("Group sleep blocks by Date summary");
 
         for (Map.Entry<String, List<SleepBlockData>> day : dayDataBlock.entrySet()) {
-            System.out.println("--------------------------------------------");
-            System.out.println("Date Summary :" + day.getKey());
+           // System.out.println("--------------------------------------------");
+           // System.out.println("Date Summary :" + day.getKey());
             for (SleepBlockData sleep : day.getValue()) {
                 // Process each activity sample in the sleep block
                 for (ActivitySample sm : sleep.getSleepData()) {
@@ -76,9 +77,20 @@ public class ConvertBlocksSleep {
                     schemeSleep(sm);
                 }
 
-                System.out.println(" * Start Sleep   :" + sleep.getStartDate());
-                System.out.println(" * End Sleep     :" + sleep.getEndDate());
-                System.out.println(" * Data          :" + sleep.getSleepData().size());
+                // Agregar información estructurada a la lista
+                SleepPeriod period = new SleepPeriod(
+                        day.getKey(),
+                        sleep.getStartDate(),
+                        sleep.getEndDate(),
+                        sleep.getSleepData()
+                );
+
+                sleepPeriods.add(period);
+
+
+               // System.out.println(" * Start Sleep   :" + sleep.getStartDate());
+               // System.out.println(" * End Sleep     :" + sleep.getEndDate());
+               // System.out.println(" * Data          :" + sleep.getSleepData().size());
 
                 groupLevelSleep();
             }
@@ -91,7 +103,56 @@ public class ConvertBlocksSleep {
             steps.clear();
         }
 
+        return sleepPeriods;
     }
+
+    /**
+     * Detect last sleep period from list of activity sample
+     * @param data list of activity sample
+     * @return SleepPeriod with last sleep period
+     */
+    public SleepPeriod calculateLastPeriod(List<MiBandActivitySample> data) {
+        SleepPeriod lastPeriod = null;
+
+        // Procesar datos en orden inverso
+        for (int i = data.size() - 1; i >= 0; i--) {
+            ActivitySample sample = data.get(i);
+            if ((sample.getKind() == 4 || sample.getKind() == 3) && i == 0) {
+                checkTypeOfActivity(sample);
+            }
+            checkSleepLineTime(sample);
+        }
+
+        // Agrupar por fecha resumen
+        Map<String, List<SleepBlockData>> dayDataBlock = new TreeMap<>();
+        for (SleepBlockData dataBlock : blockData) {
+            dayDataBlock.computeIfAbsent(dataBlock.getDateSummary(), k -> new ArrayList<>()).add(dataBlock);
+        }
+
+        for (Map.Entry<String, List<SleepBlockData>> day : dayDataBlock.entrySet()) {
+            for (SleepBlockData sleep : day.getValue()) {
+                SleepPeriod currentPeriod = new SleepPeriod(
+                        day.getKey(),
+                        sleep.getStartDate(),
+                        sleep.getEndDate(),
+                        sleep.getSleepData()
+
+                );
+
+                // Comparar para encontrar el período con la fecha de finalización más reciente
+                if (lastPeriod == null || sleep.getEndDate().after(lastPeriod.getEndSleep())) {
+                    lastPeriod = currentPeriod;
+                }
+            }
+
+            dataSleep.clear();
+            heard.clear();
+            steps.clear();
+        }
+
+        return lastPeriod;
+    }
+
 
     /**
      * Get all blocks of sleep for save JSON file

@@ -80,9 +80,9 @@ public class SleepActivityAnalyzer2 {
             sample.setKind(rawkind); // forma correcta
 
             if(rawkind == 4 || rawkind == 3){
-                System.err.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} ");
+               // System.err.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} ");
             }else {
-                System.out.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} ");
+              //  System.out.println(STR."Date : \{getDateFromSample(sample)}- sleepState : \{sample.getKind()} ");
             }
 
             list.add(sample);

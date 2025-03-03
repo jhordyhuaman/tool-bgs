@@ -9,6 +9,18 @@ public class MiBandActivitySample implements ActivitySample  {
     private int steps;
     private int heartRate;
 
+    // Columns for loop 2
+    private  int stageEight;
+    private  float stageZero;
+    // Columns for loop 3
+    private  int stageTen;
+    private  int stageTwelve;
+    private  int stageFourteen;
+    private  int stageEleven;
+
+
+    private int sleepSateLevel;
+
     public MiBandActivitySample() {
     }
 
@@ -55,24 +67,71 @@ public class MiBandActivitySample implements ActivitySample  {
     public float getIntensity() {
         return Intensity;
     }
-
     public void setIntensity(float intensity) {
         Intensity = intensity;
     }
-
     public int getSteps() {
         return steps;
     }
-
     public void setSteps(int steps) {
         this.steps = steps;
     }
-
     public int getHeartRate() {
         return heartRate;
     }
-
     public void setHeartRate(int heartRate) {
         this.heartRate = heartRate;
+    }
+    public int getStageEight() {
+        return stageEight;
+    }
+    public void setStageEight(int stageEight) {
+        this.stageEight = stageEight;
+    }
+    public int getSleepSateLevel() {
+        return sleepSateLevel;
+    }
+    public void setSleepSateLevel(int sleepSateLevel) {
+        this.sleepSateLevel = sleepSateLevel;
+    }
+
+    public int getStageTwelve() {
+        return stageTwelve;
+    }
+
+    public void setStageTwelve(int stageTwelve) {
+        this.stageTwelve = stageTwelve;
+    }
+
+    public int getStageFourteen() {
+        return stageFourteen;
+    }
+
+    public void setStageFourteen(int stageFourteen) {
+        this.stageFourteen = stageFourteen;
+    }
+
+    public int getStageTen() {
+        return stageTen;
+    }
+    public void setStageTen(int stageTen) {
+        this.stageTen = stageTen;
+    }
+
+    public float getStageZero() {
+        return stageZero;
+    }
+
+    public int getStageEleven() {
+        return stageEleven;
+    }
+
+    public void setStageEleven(int stageEleven) {
+        this.stageEleven = stageEleven;
+    }
+
+    public void setStageZero(float stageZero) {
+        double roundedStageZero = Math.round(stageZero * 1000.0) / 1000.0;
+         this.stageZero = (float) roundedStageZero;
     }
 }
