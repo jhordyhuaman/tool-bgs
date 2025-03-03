@@ -1,5 +1,4 @@
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/SleepModel.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/others/SleepActivityAnalyzer4.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/utils/ConvertBlocksSleep.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/HeartModel.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/ActivitySample.java
@@ -9,15 +8,10 @@
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/MiBandActivitySample.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/utils/DateTimeUtils.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/SleepBlockData.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/others/SleepActivityAnalyzer.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/utils/ExelTable.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/others/SleepActivityAnalyzer3.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/StepsModel.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/others/SleepActivityAnalyzer2.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/utils/ExelTableRender.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/SleepPeriod.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/Main.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/SleepAnalyzerThree.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/UI/FormValidateUI.java
-/Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/others/SleepActivityAnalyzer5.java
 /Users/jhordyhuamanollero/Innobyte/Tools/tool-bgs/src/main/java/pe/innobyte/toosanalizer/core/model/SleepAnalyzerTwo.java

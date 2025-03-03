@@ -580,12 +580,12 @@ public class Main extends javax.swing.JFrame {
 
            // convert in JSON
             ConvertBlocksSleep convertBlocks = new ConvertBlocksSleep();
-            convertBlocks.calculatePeriods(List.of((MiBandActivitySample) sleepAnalyzerTwo));
-            String JSON = convertBlocks.getJSONBlocksSleep().toString();
+            convertBlocks.calculatePeriods(sleepAnalyzerTwo);
+            //String JSON = convertBlocks.getJSONBlocksSleep().toString();
             //saveJSONStoreDevice(fileName,JSON);
 
 
-            ArrayList<ActivitySample> dataSet = new ArrayList<>(List.of((MiBandActivitySample) sleepAnalyzerTwo)); // Exel Data parse to ActivitySample class
+            ArrayList<ActivitySample> dataSet = new ArrayList<>(sleepAnalyzerTwo); // Exel Data parse to ActivitySample class
 
             Collections.reverse(dataSet);
             
